@@ -89,4 +89,48 @@ Same integration shape cp4 already uses for MT4/Sofinx/MAM APIs. Keep model serv
 
 ---
 
+## 7. Hardware Check (this Mac)
+
+- **Machine:** Apple M4, 16 GB RAM, ~450 GB free. Python 3.9.6 (system).
+- **Verdict:** Handles 100% of *build-and-run* work.
+
+| Task | RAM need | OK on 16GB? |
+|------|----------|-------------|
+| XGBoost / LightGBM (tasks #2–5) | 1–4 GB | ✅ trivial |
+| FinBERT sentiment (task #1) | ~0.5–1.5 GB | ✅ easy |
+| Run 1–3B LLM local (q4 GGUF) | 1.5–3 GB | ✅ fine (M4 Metal + unified mem) |
+| **Fine-tune** LoRA on 1B+ | wants 24GB GPU | ❌ do in cloud (~$5–50), run result locally |
+
+Disk usage total ≈ under 10 GB. 450 GB is overkill. Only *training* a custom LLM needs bigger hardware — a one-off cloud rental, not this Mac.
+
+## 8. Where This Lives (project layout)
+
+Keep the model service **separate from Laravel** (per §6). Two sibling projects:
+
+```
+/Users/oric/Sites/llmlocal/   ← Python: FinBERT + XGBoost + FastAPI service (THIS repo)
+/Users/oric/Sites/cp4/        ← Laravel app (calls llmlocal over HTTP)
+
+cp4 (Laravel)  --HTTP-->  llmlocal (Python inference service)
+               <--JSON--
+```
+
+| Work | Where |
+|------|-------|
+| Python venv, FinBERT, XGBoost, FastAPI | **llmlocal** |
+| Feature-export queries / DB schema ref | read cp4, build exporter in **llmlocal** |
+| The `Http::post(...)` client call | **cp4**, added last |
+
+cp4 stays untouched until the service works. Same integration shape cp4 already uses for MT4/Sofinx/MAM.
+
+## 9. Concrete Start (order of build)
+
+1. venv in llmlocal + install `transformers`, `torch`, `fastapi`, `uvicorn`.
+2. FastAPI `/sentiment` endpoint running **FinBERT off-the-shelf** (no training).
+3. Test on sample news strings.
+4. Wire to cp4's real `News` table (needs cp4 DB access — read cp4 `.env` or an export endpoint).
+5. Then add XGBoost trader-scoring (task #2).
+
+---
+
 **Bottom line:** Skip the custom tiny LLM. Use **XGBoost for the numbers** (most tasks) + **one small fine-tuned/off-shelf LLM for news sentiment**. Cheap, local, CPU-friendly, private. Start with FinBERT sentiment + trader-scoring XGBoost.

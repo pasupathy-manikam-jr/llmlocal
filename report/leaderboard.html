@@ -1,0 +1,349 @@
+<title>Copy-Trader Quality Leaderboard — cp4</title>
+<style>
+  :root {
+    --bg: #f4f6f5; --surface: #ffffff; --surface-2: #eef1f0;
+    --ink: #14201c; --ink-soft: #46564f; --ink-faint: #7c8c85;
+    --line: #dde3e0; --line-strong: #c8d1cd;
+    --accent: #0d8f83; --accent-ink: #0a6f66; --accent-wash: #0d8f8314;
+    --pos: #1f9d63; --strong: #4aa878; --fair: #9aa39c; --warn: #bf8a2c; --crit: #c8453b;
+    --shadow: 0 1px 2px rgba(20,32,28,.06), 0 8px 24px rgba(20,32,28,.05);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0c1310; --surface: #121b17; --surface-2: #18231e;
+      --ink: #e8efeb; --ink-soft: #9fb0a9; --ink-faint: #6a7b74;
+      --line: #22302a; --line-strong: #2e3e37;
+      --accent: #2fc3b3; --accent-ink: #6fe0d3; --accent-wash: #2fc3b31c;
+      --pos: #35c07e; --strong: #57b98a; --fair: #7f8d86; --warn: #d99f45; --crit: #e0655a;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="light"] {
+    --bg: #f4f6f5; --surface: #ffffff; --surface-2: #eef1f0;
+    --ink: #14201c; --ink-soft: #46564f; --ink-faint: #7c8c85;
+    --line: #dde3e0; --line-strong: #c8d1cd;
+    --accent: #0d8f83; --accent-ink: #0a6f66; --accent-wash: #0d8f8314;
+    --pos: #1f9d63; --strong: #4aa878; --fair: #9aa39c; --warn: #bf8a2c; --crit: #c8453b;
+    --shadow: 0 1px 2px rgba(20,32,28,.06), 0 8px 24px rgba(20,32,28,.05);
+  }
+  :root[data-theme="dark"] {
+    --bg: #0c1310; --surface: #121b17; --surface-2: #18231e;
+    --ink: #e8efeb; --ink-soft: #9fb0a9; --ink-faint: #6a7b74;
+    --line: #22302a; --line-strong: #2e3e37;
+    --accent: #2fc3b3; --accent-ink: #6fe0d3; --accent-wash: #2fc3b31c;
+    --pos: #35c07e; --strong: #57b98a; --fair: #7f8d86; --warn: #d99f45; --crit: #e0655a;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    line-height: 1.5; -webkit-font-smoothing: antialiased;
+  }
+  .serif { font-family: "Iowan Old Style", Georgia, "Times New Roman", serif; }
+  .mono { font-family: ui-monospace, "SF Mono", "SFMono-Regular", Menlo, monospace;
+          font-variant-numeric: tabular-nums; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+
+  /* Header */
+  header { border-bottom: 1px solid var(--line); background: var(--surface); }
+  .eyebrow { text-transform: uppercase; letter-spacing: .14em; font-size: 11px;
+             font-weight: 600; color: var(--accent-ink); }
+  header h1 { font-size: clamp(28px, 4.4vw, 44px); line-height: 1.08; margin: 10px 0 12px;
+              font-weight: 600; text-wrap: balance; letter-spacing: -.01em; }
+  header p.lede { color: var(--ink-soft); max-width: 62ch; margin: 0 0 4px; font-size: 16px; }
+  .headbar { display: flex; justify-content: space-between; align-items: flex-start;
+             gap: 24px; padding: 34px 0 30px; flex-wrap: wrap; }
+  .stamp { text-align: right; color: var(--ink-faint); font-size: 12px; white-space: nowrap; }
+  .stamp b { color: var(--ink-soft); font-weight: 600; }
+
+  /* Finding banner */
+  .finding { display: flex; gap: 16px; align-items: baseline; margin: 26px 0 6px;
+             padding: 20px 22px; background: var(--accent-wash);
+             border: 1px solid var(--line); border-left: 3px solid var(--accent); border-radius: 8px; }
+  .finding .big { font-size: clamp(34px, 5vw, 46px); font-weight: 600; color: var(--accent-ink);
+                  line-height: 1; letter-spacing: -.02em; }
+  .finding p { margin: 0; color: var(--ink-soft); }
+  .finding p b { color: var(--ink); font-weight: 600; }
+
+  section { padding: 30px 0; }
+  .sec-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 18px; }
+  .sec-head h2 { font-size: 19px; font-weight: 600; margin: 0; letter-spacing: -.01em; }
+  .sec-head .note { color: var(--ink-faint); font-size: 13px; }
+
+  /* KPI row */
+  .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .kpi { background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+         padding: 18px 18px 16px; box-shadow: var(--shadow); }
+  .kpi .label { font-size: 12px; color: var(--ink-faint); text-transform: uppercase;
+                letter-spacing: .07em; font-weight: 600; }
+  .kpi .val { font-size: 30px; font-weight: 600; margin: 8px 0 2px; letter-spacing: -.02em; }
+  .kpi .sub { font-size: 12.5px; color: var(--ink-soft); }
+  .kpi.accent .val { color: var(--accent-ink); }
+  .kpi.warn .val { color: var(--warn); }
+
+  /* Histogram */
+  .hist { background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+          padding: 24px 22px 16px; box-shadow: var(--shadow); }
+  .bars { display: grid; grid-template-columns: repeat(10, 1fr); gap: 8px;
+          align-items: end; height: 190px; }
+  .bar-col { display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+             height: 100%; gap: 6px; }
+  .bar-col .ct { font-size: 11px; color: var(--ink-soft); font-weight: 600; }
+  .bar { width: 100%; border-radius: 4px 4px 2px 2px; min-height: 3px;
+         background: var(--fair); transition: opacity .2s; }
+  .bar.t-crit { background: var(--crit); } .bar.t-warn { background: var(--warn); }
+  .bar.t-fair { background: var(--fair); } .bar.t-strong { background: var(--strong); }
+  .bar.t-pos { background: var(--pos); }
+  .axis { display: grid; grid-template-columns: repeat(10, 1fr); gap: 8px; margin-top: 8px;
+          border-top: 1px solid var(--line); padding-top: 8px; }
+  .axis span { font-size: 10.5px; color: var(--ink-faint); text-align: center; }
+
+  /* Table */
+  .tablecard { background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+               box-shadow: var(--shadow); overflow: hidden; }
+  .scroll { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; min-width: 720px; }
+  thead th { font-size: 11px; text-transform: uppercase; letter-spacing: .06em;
+             color: var(--ink-faint); font-weight: 600; text-align: right;
+             padding: 13px 16px; border-bottom: 1px solid var(--line-strong); background: var(--surface-2); }
+  thead th.l { text-align: left; }
+  tbody td { padding: 12px 16px; border-bottom: 1px solid var(--line); text-align: right;
+             font-size: 14px; white-space: nowrap; }
+  tbody td.l { text-align: left; }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: var(--accent-wash); }
+  .rank { color: var(--ink-faint); font-weight: 600; width: 34px; }
+  .acct { font-weight: 600; }
+
+  .scorecell { display: inline-flex; align-items: center; gap: 10px; justify-content: flex-end; }
+  .scorenum { font-weight: 700; width: 42px; text-align: right; }
+  .track { width: 90px; height: 7px; background: var(--surface-2); border-radius: 4px;
+           overflow: hidden; border: 1px solid var(--line); }
+  .fill { height: 100%; border-radius: 4px; }
+
+  .chip { display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 9px;
+          border-radius: 999px; letter-spacing: .02em; }
+  .chip.pos { background: color-mix(in srgb, var(--pos) 16%, transparent); color: var(--pos); }
+  .chip.strong { background: color-mix(in srgb, var(--strong) 16%, transparent); color: var(--strong); }
+  .chip.fair { background: color-mix(in srgb, var(--fair) 20%, transparent); color: var(--ink-soft); }
+  .chip.warn { background: color-mix(in srgb, var(--warn) 16%, transparent); color: var(--warn); }
+  .chip.crit { background: color-mix(in srgb, var(--crit) 16%, transparent); color: var(--crit); }
+  .pf { color: var(--ink-soft); }
+  .neg { color: var(--crit); } .posv { color: var(--pos); }
+  .driver { color: var(--ink-soft); font-size: 12.5px; }
+
+  .two { display: grid; grid-template-columns: 1fr; gap: 16px; }
+
+  /* Method */
+  .method { background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px;
+            padding: 24px 26px; }
+  .method h3 { margin: 0 0 14px; font-size: 15px; font-weight: 600; }
+  .weights { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 18px; }
+  .wtag { font-size: 12.5px; padding: 5px 11px; border-radius: 6px; background: var(--surface);
+          border: 1px solid var(--line); color: var(--ink-soft); }
+  .wtag b { color: var(--ink); }
+  .method p { margin: 0 0 10px; color: var(--ink-soft); font-size: 14px; max-width: 78ch; }
+  .method code { font-family: ui-monospace, Menlo, monospace; font-size: 12.5px;
+                 background: var(--surface); padding: 1px 6px; border-radius: 4px; border: 1px solid var(--line); }
+
+  footer { border-top: 1px solid var(--line); color: var(--ink-faint); font-size: 12.5px;
+           padding: 22px 0 40px; }
+  .legend { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 8px; }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .dot { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+
+  @media (max-width: 720px) {
+    .kpis { grid-template-columns: repeat(2, 1fr); }
+    .finding { flex-direction: column; gap: 6px; }
+  }
+</style>
+
+<header>
+  <div class="wrap headbar">
+    <div>
+      <div class="eyebrow">cp4 · Copy-Trading Intelligence</div>
+      <h1 class="serif">Copy-Trader Quality Leaderboard</h1>
+      <p class="lede">Every account ranked by how good — and how safe — it is to copy, scored from
+        its real trading history. Not who made the most noise; who trades with skill and discipline.</p>
+    </div>
+    <div class="stamp mono">
+      <div><b>17.19M</b> trades analysed</div>
+      <div><b>22,740</b> accounts scored</div>
+      <div>min. 50 closed trades</div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <div class="finding">
+    <div class="big mono">25.3%</div>
+    <p>Only about a quarter of active accounts are actually profitable. More tellingly,
+      <b>7,576 accounts win more than 60% of their trades yet still lose money</b> — they take small
+      wins and let losses run. Win rate alone is a trap; this score is built to see through it.</p>
+  </div>
+
+  <section>
+    <div class="sec-head"><h2>The trader base at a glance</h2>
+      <span class="note">accounts with ≥ 50 closed trades</span></div>
+    <div class="kpis">
+      <div class="kpi accent">
+        <div class="label">Accounts scored</div>
+        <div class="val mono">22,740</div>
+        <div class="sub">out of 32,411 total</div>
+      </div>
+      <div class="kpi warn">
+        <div class="label">Profitable</div>
+        <div class="val mono">25.3%</div>
+        <div class="sub">3 in 4 lose money net</div>
+      </div>
+      <div class="kpi">
+        <div class="label">Median profit factor</div>
+        <div class="val mono">0.75</div>
+        <div class="sub">below 1.0 = losing</div>
+      </div>
+      <div class="kpi">
+        <div class="label">Win-often, lose-anyway</div>
+        <div class="val mono">7,576</div>
+        <div class="sub">high win rate, still negative</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>How quality is distributed</h2>
+      <span class="note">count of accounts per score band</span></div>
+    <div class="hist">
+      <div class="bars" id="bars"></div>
+      <div class="axis" id="axis"></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>Top 20 — worth following</h2>
+      <span class="note">highest quality scores</span></div>
+    <div class="tablecard"><div class="scroll">
+      <table>
+        <thead><tr>
+          <th class="l">#</th><th class="l">Account</th><th class="l">Quality score</th>
+          <th class="l">Tier</th><th>Trades</th><th>Win rate</th>
+          <th>Profit factor</th><th>Net profit</th><th class="l">Why it scores</th>
+        </tr></thead>
+        <tbody id="top"></tbody>
+      </table>
+    </div></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>Bottom 10 — do not copy</h2>
+      <span class="note">highest-risk accounts, flagged for review</span></div>
+    <div class="tablecard"><div class="scroll">
+      <table>
+        <thead><tr>
+          <th class="l">#</th><th class="l">Account</th><th class="l">Quality score</th>
+          <th class="l">Tier</th><th>Trades</th><th>Win rate</th>
+          <th>Profit factor</th><th>Net loss</th>
+        </tr></thead>
+        <tbody id="bottom"></tbody>
+      </table>
+    </div></div>
+  </section>
+
+  <section>
+    <div class="method">
+      <h3>How the score is built</h3>
+      <p>Each account's closed trades are boiled down to a handful of interpretable metrics, each
+        ranked against the whole population, then combined into a single 0–100 score. There is no
+        black box — every point is traceable to real trading behaviour. Weights:</p>
+      <div class="weights">
+        <span class="wtag"><b>25%</b> net profit</span>
+        <span class="wtag"><b>20%</b> profit factor</span>
+        <span class="wtag"><b>20%</b> consistency (return / volatility)</span>
+        <span class="wtag"><b>15%</b> win rate</span>
+        <span class="wtag"><b>10%</b> stop-loss discipline</span>
+        <span class="wtag"><b>10%</b> profit per trade</span>
+      </div>
+      <p><b>Profit factor</b> is money won ÷ money lost — above <code>1.0</code> means winners
+        outweigh losers. <b>Consistency</b> rewards steady gains over one lucky home-run.
+        <b>Stop-loss discipline</b> credits accounts that actually cap their downside. Only accounts
+        with at least 50 closed trades are scored, so the numbers aren't noise.</p>
+    </div>
+  </section>
+
+  <footer>
+    <div>Generated locally from <span class="mono">member_mt4_trade</span> · cp4 model service ·
+      scores recomputed on demand, never leaves your machine.</div>
+    <div class="legend">
+      <span><i class="dot" style="background:var(--pos)"></i> Elite 80–100</span>
+      <span><i class="dot" style="background:var(--strong)"></i> Strong 60–80</span>
+      <span><i class="dot" style="background:var(--fair)"></i> Fair 40–60</span>
+      <span><i class="dot" style="background:var(--warn)"></i> Weak 20–40</span>
+      <span><i class="dot" style="background:var(--crit)"></i> High risk 0–20</span>
+    </div>
+  </footer>
+</main>
+
+<script>
+  const DATA = {"accounts_scored": 22740, "min_trades": 50, "total_trades_analyzed": 17186939, "pct_profitable": 25.3, "median_win_rate": 0.6154, "median_profit_factor": 0.7501, "median_score": 42.8, "median_sl_usage": 0.1038, "top20": [{"rank": 1, "account": 87395, "score": 94.9, "n_trades": 106, "win_rate": 0.8113, "profit_factor": 5.7062142897550485, "net_profit": 3327.67, "sl_usage": 1.0, "driver": "disciplined stop-losses"}, {"rank": 2, "account": 80437, "score": 94.9, "n_trades": 163, "win_rate": 0.9202, "profit_factor": 1.9921749738846315, "net_profit": 59523.96, "sl_usage": 1.0, "driver": "disciplined stop-losses"}, {"rank": 3, "account": 82604, "score": 93.9, "n_trades": 206, "win_rate": 1.0, "profit_factor": 5761.913043478261, "net_profit": 468.64, "sl_usage": 0.9806, "driver": "high win rate"}, {"rank": 4, "account": 95924, "score": 93.8, "n_trades": 62, "win_rate": 0.7742, "profit_factor": 2.992886456908345, "net_profit": 3933.36, "sl_usage": 1.0, "driver": "disciplined stop-losses"}, {"rank": 5, "account": 75454, "score": 92.0, "n_trades": 227, "win_rate": 0.8106, "profit_factor": 3.850994411249447, "net_profit": 74973.94, "sl_usage": 0.5683, "driver": "good profit per trade"}, {"rank": 6, "account": 95216, "score": 91.7, "n_trades": 398, "win_rate": 0.9045, "profit_factor": 1.6271220695230395, "net_profit": 8067.8, "sl_usage": 1.0, "driver": "disciplined stop-losses"}, {"rank": 7, "account": 134242, "score": 91.3, "n_trades": 51, "win_rate": 0.7451, "profit_factor": 3.5448584498166005, "net_profit": 3593.9, "sl_usage": 0.7843, "driver": "consistent returns"}, {"rank": 8, "account": 82354, "score": 90.9, "n_trades": 1719, "win_rate": 0.8389, "profit_factor": 4.114950541060877, "net_profit": 8445.69, "sl_usage": 0.7202, "driver": "wins outweigh losses"}, {"rank": 9, "account": 51464, "score": 90.9, "n_trades": 56, "win_rate": 0.8393, "profit_factor": 25.06225165562914, "net_profit": 181.67, "sl_usage": 0.8036, "driver": "wins outweigh losses"}, {"rank": 10, "account": 101494, "score": 90.2, "n_trades": 56, "win_rate": 0.8214, "profit_factor": 3.8557829604950022, "net_profit": 240.0, "sl_usage": 0.875, "driver": "consistent returns"}, {"rank": 11, "account": 136660, "score": 90.1, "n_trades": 2689, "win_rate": 0.7884, "profit_factor": 1.9246774805346298, "net_profit": 9068.46, "sl_usage": 0.9461, "driver": "disciplined stop-losses"}, {"rank": 12, "account": 92940, "score": 90.1, "n_trades": 258, "win_rate": 0.8837, "profit_factor": 4.452036012710368, "net_profit": 17599.17, "sl_usage": 0.3295, "driver": "wins outweigh losses"}, {"rank": 13, "account": 72273, "score": 90.0, "n_trades": 138, "win_rate": 0.7174, "profit_factor": 4.147974791972589, "net_profit": 1029.01, "sl_usage": 0.9783, "driver": "disciplined stop-losses"}, {"rank": 14, "account": 95923, "score": 89.8, "n_trades": 64, "win_rate": 0.7031, "profit_factor": 2.5264461947733556, "net_profit": 3511.62, "sl_usage": 1.0, "driver": "disciplined stop-losses"}, {"rank": 15, "account": 53501, "score": 89.8, "n_trades": 521, "win_rate": 0.8906, "profit_factor": 1.611121543447315, "net_profit": 3026.61, "sl_usage": 0.9962, "driver": "disciplined stop-losses"}, {"rank": 16, "account": 66430, "score": 89.7, "n_trades": 73, "win_rate": 0.8767, "profit_factor": 7.253938008130081, "net_profit": 984.62, "sl_usage": 0.5068, "driver": "wins outweigh losses"}, {"rank": 17, "account": 32042, "score": 89.6, "n_trades": 81, "win_rate": 1.0, "profit_factor": 5761.913043478261, "net_profit": 50038.27, "sl_usage": 0.0, "driver": "consistent returns"}, {"rank": 18, "account": 69247, "score": 89.6, "n_trades": 261, "win_rate": 0.8966, "profit_factor": 5.918524949734966, "net_profit": 645822.0, "sl_usage": 0.0, "driver": "good profit per trade"}, {"rank": 19, "account": 64180, "score": 89.6, "n_trades": 276, "win_rate": 0.8551, "profit_factor": 1.4180815085984364, "net_profit": 13912.49, "sl_usage": 0.7355, "driver": "high win rate"}, {"rank": 20, "account": 86652, "score": 89.3, "n_trades": 213, "win_rate": 0.723, "profit_factor": 4.291926638787219, "net_profit": 92737.82, "sl_usage": 0.2958, "driver": "good profit per trade"}], "bottom10": [{"rank": 22740, "account": 59360, "score": 0.4, "n_trades": 50, "win_rate": 0.28, "profit_factor": 0.052492666020385444, "net_profit": -604576.99, "sl_usage": 0.0, "driver": "high win rate"}, {"rank": 22739, "account": 124674, "score": 0.5, "n_trades": 101, "win_rate": 0.1881, "profit_factor": 0.0051906535082498415, "net_profit": -49808.95, "sl_usage": 0.0, "driver": "strong net profit"}, {"rank": 22738, "account": 136200, "score": 0.5, "n_trades": 4830, "win_rate": 0.0, "profit_factor": 0.0, "net_profit": -167030.67, "sl_usage": 0.0, "driver": "good profit per trade"}, {"rank": 22737, "account": 75551, "score": 1.0, "n_trades": 730, "win_rate": 0.1699, "profit_factor": 0.12305927328768317, "net_profit": -1690687.0, "sl_usage": 0.0671, "driver": "disciplined stop-losses"}, {"rank": 22736, "account": 32713, "score": 1.2, "n_trades": 121, "win_rate": 0.281, "profit_factor": 0.15107639025479452, "net_profit": -53303.09, "sl_usage": 0.0, "driver": "high win rate"}, {"rank": 22735, "account": 42679, "score": 1.4, "n_trades": 4361, "win_rate": 0.128, "profit_factor": 0.1531268858930641, "net_profit": -161197.36, "sl_usage": 0.0, "driver": "good profit per trade"}, {"rank": 22734, "account": 47028, "score": 1.6, "n_trades": 1621, "win_rate": 0.1573, "profit_factor": 0.10277455368261708, "net_profit": -40707.28, "sl_usage": 0.0389, "driver": "good profit per trade"}, {"rank": 22733, "account": 99134, "score": 1.7, "n_trades": 268, "win_rate": 0.041, "profit_factor": 0.004782444192205827, "net_profit": -13151.8, "sl_usage": 0.0, "driver": "strong net profit"}, {"rank": 22732, "account": 65174, "score": 1.8, "n_trades": 117, "win_rate": 0.3419, "profit_factor": 0.2936288843636477, "net_profit": -181418.0, "sl_usage": 0.0, "driver": "high win rate"}, {"rank": 22731, "account": 43498, "score": 1.9, "n_trades": 288, "win_rate": 0.0938, "profit_factor": 0.07677726664477785, "net_profit": -13018.89, "sl_usage": 0.0, "driver": "strong net profit"}], "score_hist": [{"band": "0-10", "count": 228}, {"band": "10-20", "count": 1199}, {"band": "20-30", "count": 3658}, {"band": "30-40", "count": 4991}, {"band": "40-50", "count": 3793}, {"band": "50-60", "count": 2191}, {"band": "60-70", "count": 1853}, {"band": "70-80", "count": 2421}, {"band": "80-90", "count": 2393}, {"band": "90-100", "count": 13}], "high_winrate_but_losing": 7576, "high_winrate_count": 12126};
+
+  const tier = s => s >= 80 ? ['pos','Elite'] : s >= 60 ? ['strong','Strong']
+              : s >= 40 ? ['fair','Fair'] : s >= 20 ? ['warn','Weak'] : ['crit','High risk'];
+  const tierColor = { pos:'var(--pos)', strong:'var(--strong)', fair:'var(--fair)',
+                      warn:'var(--warn)', crit:'var(--crit)' };
+  const money = v => {
+    const a = Math.abs(v), s = v < 0 ? '−' : '';
+    if (a >= 1e6) return s + '$' + (a/1e6).toFixed(2) + 'M';
+    if (a >= 1e3) return s + '$' + (a/1e3).toFixed(1) + 'k';
+    return s + '$' + a.toFixed(0);
+  };
+  const pf = v => v >= 100 ? '100+' : v.toFixed(2);
+  const pct = v => (v*100).toFixed(0) + '%';
+
+  // Histogram
+  const maxCt = Math.max(...DATA.score_hist.map(b => b.count));
+  const bands = ['t-crit','t-crit','t-warn','t-warn','t-fair','t-fair','t-strong','t-strong','t-pos','t-pos'];
+  document.getElementById('bars').innerHTML = DATA.score_hist.map((b,i) => `
+    <div class="bar-col">
+      <span class="ct mono">${b.count.toLocaleString()}</span>
+      <div class="bar ${bands[i]}" style="height:${Math.max(3, b.count/maxCt*150)}px"></div>
+    </div>`).join('');
+  document.getElementById('axis').innerHTML = DATA.score_hist.map(b =>
+    `<span class="mono">${b.band}</span>`).join('');
+
+  // Top table
+  document.getElementById('top').innerHTML = DATA.top20.map(r => {
+    const [cls,name] = tier(r.score);
+    return `<tr>
+      <td class="l rank mono">${r.rank}</td>
+      <td class="l acct mono">#${r.account}</td>
+      <td class="l"><span class="scorecell">
+        <span class="track"><span class="fill" style="width:${r.score}%;background:${tierColor[cls]}"></span></span>
+        <span class="scorenum mono">${r.score.toFixed(1)}</span></span></td>
+      <td class="l"><span class="chip ${cls}">${name}</span></td>
+      <td class="mono">${r.n_trades.toLocaleString()}</td>
+      <td class="mono">${pct(r.win_rate)}</td>
+      <td class="mono pf">${pf(r.profit_factor)}</td>
+      <td class="mono posv">${money(r.net_profit)}</td>
+      <td class="l driver">${r.driver}</td>
+    </tr>`;
+  }).join('');
+
+  // Bottom table
+  document.getElementById('bottom').innerHTML = DATA.bottom10.map(r => {
+    const [cls,name] = tier(r.score);
+    return `<tr>
+      <td class="l rank mono">${r.rank.toLocaleString()}</td>
+      <td class="l acct mono">#${r.account}</td>
+      <td class="l"><span class="scorecell">
+        <span class="track"><span class="fill" style="width:${Math.max(2,r.score)}%;background:${tierColor[cls]}"></span></span>
+        <span class="scorenum mono">${r.score.toFixed(1)}</span></span></td>
+      <td class="l"><span class="chip ${cls}">${name}</span></td>
+      <td class="mono">${r.n_trades.toLocaleString()}</td>
+      <td class="mono">${pct(r.win_rate)}</td>
+      <td class="mono pf">${pf(r.profit_factor)}</td>
+      <td class="mono neg">${money(r.net_profit)}</td>
+    </tr>`;
+  }).join('');
+</script>
